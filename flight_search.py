@@ -7,8 +7,8 @@ from flight_data import FlightData
 class FlightSearch:
     # This class is responsible for talking to the Flight Search API.
     def __init__(self):
-        self.starting_city = 'LON'
-        self.curr = 'GBP'
+        self.starting_city = 'CEB'
+        self.curr = 'PHP'
         self.flight_search_endpoint_search = f"https://api.tequila.kiwi.com/v2/search"
         self.flight_search_endpoint_locations = f"https://api.tequila.kiwi.com/locations/query"
         self.headers = {
@@ -37,7 +37,7 @@ class FlightSearch:
         try:
             data = response.json()['data'][0]
         except IndexError:
-            print(f"No flights found for {departure_city_code}")
+            print(f"No flights found to {departure_city_code}")
             return None
 
         flight_data = FlightData(
@@ -49,7 +49,7 @@ class FlightSearch:
             depart_date=data["route"][0]["local_departure"].split("T")[0],
             return_date=data["route"][1]["local_departure"].split("T")[0]
         )
-        print(f"{flight_data.destination_city}: £{flight_data.price}")
+        print(f"{flight_data.destination_city}: {flight_data.price} Php")
         return flight_data
 
     def get_iata_code(self, city):
