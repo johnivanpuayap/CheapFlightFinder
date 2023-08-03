@@ -51,3 +51,8 @@ class DataManager:
         response = requests.post(url=self.users_post_endpoint, json=parameters)
         print(response.status_code)
         print(response.text)
+
+    def get_emails(self):
+        response = requests.get(url=self.users_post_endpoint)
+        users = response.json()['users']
+        return users
