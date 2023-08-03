@@ -5,7 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from flight_data import FlightData
 
-STARTING_CITY = 'MNL'
+STARTING_CITY = 'CEB'
 
 
 class FlightSearch:
