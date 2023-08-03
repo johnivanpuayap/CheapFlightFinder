@@ -27,13 +27,16 @@ def add_iatacode():
 # Search for Flights
 def search_flights():
     print("\nCheapest Flights Found")
-    for data in sheet_data[1:2]:
+    for data in sheet_data:
         flight_data = flight_search.get_flights(data['iataCode'])
 
         if flight_data:
             if flight_data.price < data['lowestPrice']:
-                return flight_data
-    return flight_data
+                users = data_manager.get_emails()
+
+                for user in users:
+                    notification_manager.send_emails(user['email'], flight_data)
+
 
 # Add New User
 def add_user():
@@ -42,13 +45,6 @@ def add_user():
     email = input("What is your Email?\n")
     user = UserData(first_name, last_name, email)
     data_manager.add_user(user)
-
-
-def send_emails(flight_data):
-    users = data_manager.get_emails()
-
-    for user in users:
-        notification_manager.send_emails(user['email'], flight_data)
 
 
 # User interface for sign up
@@ -64,8 +60,7 @@ while answer == "":
     if answer == "1":
         load_flight_data()
         add_iatacode()
-        flight_data = search_flights()
-        send_emails(flight_data)
+        search_flights()
     elif answer == "2":
         add_user()
     else:
