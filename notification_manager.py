@@ -26,4 +26,4 @@ class NotificationManager:
             to=self.MY_PHONE_NUMBER
         )
 
-        print(message.sid)
+        print("Flight within budget, sent an SMS")

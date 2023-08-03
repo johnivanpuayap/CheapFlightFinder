@@ -16,7 +16,6 @@ class FlightSearch:
         }
 
     def get_flights(self, departure_city_code) -> FlightData:
-        print("Cheapest Flights Found")
         date_today = datetime.now()
         tomorrow = (date_today + timedelta(days=1)).strftime("%d/%m/%Y")
         six_months = (date_today + timedelta(days=180)).strftime("%d/%m/%Y")

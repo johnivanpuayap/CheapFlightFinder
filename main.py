@@ -17,19 +17,7 @@ sheet_data = []
 # Load Google Sheets Data
 def load_flight_data():
     global sheet_data
-    # sheet_data = data_manager.get_flight_data()
-    sheet_data = [
-        {'city': 'Manila', 'iataCode': 'MNL', 'id': 2, 'lowestPrice': 1000},
-        {'city': 'Bangkok', 'iataCode': 'BKK', 'id': 3, 'lowestPrice': 8000},
-        {'city': 'Singapore', 'iataCode': 'SIN', 'id': 4, 'lowestPrice': 12000},
-        {'city': 'Seoul', 'iataCode': 'ICN', 'id': 5, 'lowestPrice': 7000},
-        {'city': 'Beijing', 'iataCode': 'PEK', 'id': 6, 'lowestPrice': 5000},
-        {'city': 'Shanghai', 'iataCode': 'PVG', 'id': 7, 'lowestPrice': 5600},
-        {'city': 'Jakarta', 'iataCode': 'CGK', 'id': 8, 'lowestPrice': 9000},
-        {'city': 'Ho Chi Minh City', 'iataCode': 'SGN', 'id': 9, 'lowestPrice': 6000},
-        {'city': 'Hong Kong', 'iataCode': 'HKG', 'id': 10, 'lowestPrice': 6400},
-        {'city': 'Taipei', 'iataCode': 'TPE', 'id': 11, 'lowestPrice': 8400}]
-
+    sheet_data = data_manager.get_flight_data()
 
 def add_iatacode():
     for data in sheet_data:
@@ -40,6 +28,7 @@ def add_iatacode():
 
 # Search for Flights
 def search_flights():
+    print("\nCheapest Flights Found")
     for data in sheet_data:
         flight_data = flight_search.get_flights(data['iataCode'])
 
