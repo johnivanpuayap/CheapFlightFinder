@@ -24,7 +24,10 @@ class DataManager:
             {'city': 'Ho Chi Minh City', 'iataCode': 'SGN', 'id': 9, 'lowestPrice': 6000},
             {'city': 'Hong Kong', 'iataCode': 'HKG', 'id': 10, 'lowestPrice': 6400},
             {'city': 'Taipei', 'iataCode': 'TPE', 'id': 11, 'lowestPrice': 8400},
-            {'city': 'Bali', 'iataCode': 'DPS', 'id': 12, 'lowestPrice': 12000}]
+            {'city': 'Bali', 'iataCode': 'DPS', 'id': 12, 'lowestPrice': 12000},
+            {'city': 'Osaka', 'iataCode': 'KIX', 'id': 13, 'lowestPrice': 22000},
+            {'city': 'London', 'iataCode': 'LON', 'id': 14, 'lowestPrice': 45000}]
+
         return sheet_data
 
     def edit_iata_code(self, id, data):

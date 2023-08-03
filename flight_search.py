@@ -2,6 +2,7 @@ import os
 import requests
 from datetime import datetime, timedelta
 from flight_data import FlightData
+from pprint import pprint
 
 
 class FlightSearch:
@@ -15,7 +16,7 @@ class FlightSearch:
             "apikey": os.environ['FLIGHT_SEARCH_API_KEY']
         }
 
-    def get_flights(self, departure_city_code) -> FlightData:
+    def get_direct_flights(self, departure_city_code) -> FlightData:
         date_today = datetime.now()
         tomorrow = (date_today + timedelta(days=1)).strftime("%d/%m/%Y")
         six_months = (date_today + timedelta(days=180)).strftime("%d/%m/%Y")
@@ -37,8 +38,8 @@ class FlightSearch:
         try:
             data = response.json()['data'][0]
         except IndexError:
-            print(f"No flights found to {departure_city_code}")
-            return None
+            print(f"No direct flights found to {departure_city_code}")
+            return self.get_one_stop_flights(departure_city_code)
 
         flight_data = FlightData(
             price=data["price"],
@@ -47,7 +48,49 @@ class FlightSearch:
             destination_city=data["route"][0]["cityTo"],
             destination_airport=data["route"][0]["flyTo"],
             depart_date=data["route"][0]["local_departure"].split("T")[0],
-            return_date=data["route"][1]["local_departure"].split("T")[0]
+            return_date=data["route"][1]["local_departure"].split("T")[0],
+            stop_overs=0,
+            via_city=""
+        )
+        print(f"{flight_data.destination_city}: {flight_data.price} Php")
+        return flight_data
+
+    def get_one_stop_flights(self, departure_city_code) -> FlightData:
+        date_today = datetime.now()
+        tomorrow = (date_today + timedelta(days=1)).strftime("%d/%m/%Y")
+        six_months = (date_today + timedelta(days=180)).strftime("%d/%m/%Y")
+
+        parameters = {
+            "fly_from": self.starting_city,
+            "fly_to": departure_city_code,
+            "date_from": tomorrow,
+            "date_to": six_months,
+            "nights_in_dst_from": 7,
+            "nights_in_dst_to": 28,
+            "flight_type": "round",
+            "max_stopovers": 1,
+            "curr": self.curr,
+            "one_for_city": 1,
+        }
+
+        response = requests.get(self.flight_search_endpoint_search, params=parameters, headers=self.headers)
+        try:
+            data = response.json()['data'][0]
+        except IndexError:
+            print(f"No 1 stop flights found to {departure_city_code}")
+            return None
+
+        pprint(data)
+        flight_data = FlightData(
+            price=data["price"],
+            origin_city=data["route"][0]["cityFrom"],
+            origin_airport=data["route"][0]["flyFrom"],
+            destination_city=data["route"][0]["cityTo"],
+            destination_airport=data["route"][0]["flyTo"],
+            depart_date=data["route"][0]["local_departure"].split("T")[0],
+            return_date=data["route"][1]["local_departure"].split("T")[0],
+            stop_overs=1,
+            via_city=""
         )
         print(f"{flight_data.destination_city}: {flight_data.price} Php")
         return flight_data
