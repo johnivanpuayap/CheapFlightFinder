@@ -15,7 +15,7 @@ class NotificationManager:
 
     def send_message(self, flight_data: FlightData):
 
-        body = f"Low price alert! Only Php{flight_data.price} to " \
+        body = f"Low price alert! Only {flight_data.price} Php to " \
                f"fly from {flight_data.origin_city}-{flight_data.origin_airport} " \
                f"to {flight_data.destination_city}-{flight_data.destination_airport}, " \
                f"from {flight_data.depart_date} to {flight_data.return_date}"
