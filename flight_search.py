@@ -5,7 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from flight_data import FlightData
 
-STARTING_CITY = 'LON'
+STARTING_CITY = 'MNL'
 
 
 class FlightSearch:
@@ -24,7 +24,7 @@ class FlightSearch:
         tomorrow = (date_today + timedelta(days=1)).strftime("%d/%m/%Y")
         six_months = (date_today + timedelta(days=180)).strftime("%d/%m/%Y")
 
-        parameters = {
+        query = {
             "fly_from": self.starting_city,
             "fly_to": departure_city_code,
             "date_from": tomorrow,
@@ -37,37 +37,36 @@ class FlightSearch:
             "one_for_city": 1,
         }
 
-        # response = requests.get(self.flight_search_endpoint_search, params=parameters, headers=self.headers)
-        response = []
+        response = requests.get(self.flight_search_endpoint_search, params=query, headers=self.headers)
+
         try:
-            # data = response.json()['data'][0]
-            # For testing purposes
-            data = response[0]
+            data = response.json()['data'][0]
         except IndexError:
             print(f"No direct flights found to {departure_city_code}")
-            parameters["max_stopovers"] = 1
-            response = requests.get(self.flight_search_endpoint_search, params=parameters, headers=self.headers)
+            # Stopovers should be 2 since it is a round trip
+            query["max_stopovers"] = 2
+
+            one_stop_response = requests.get(self.flight_search_endpoint_search, params=query, headers=self.headers)
+
             try:
-                data = response.json()['data'][0]
+                data = one_stop_response.json()['data'][0]
             except IndexError:
                 print(f"No 1 stop flights found to {departure_city_code}")
                 return None
             else:
-                pprint(parameters)
-                pprint(data)
                 flight_data = FlightData(
                     price=data["price"],
                     origin_city=data["route"][0]["cityFrom"],
                     origin_airport=data["route"][0]["flyFrom"],
                     destination_city=data["route"][1]["cityTo"],
                     destination_airport=data["route"][1]["flyTo"],
-                    out_date=data["route"][0]["local_departure"].split("T")[0],
+                    depart_date=data["route"][0]["local_departure"].split("T")[0],
                     return_date=data["route"][2]["local_departure"].split("T")[0],
                     stop_overs=1,
                     via_city=data["route"][0]["cityTo"]
                 )
                 print(f"{flight_data.destination_city}: {flight_data.price} Php")
-                print(f"Flight has {flight_data.stop_overs} stop over, via {flight_data.via_city}")
+                print(f"Flight has {flight_data.stop_overs} stop overs, via {flight_data.via_city}.")
                 return flight_data
         else:
             flight_data = FlightData(

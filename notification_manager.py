@@ -20,6 +20,9 @@ class NotificationManager:
                f"to {flight_data.destination_city}-{flight_data.destination_airport}, " \
                f"from {flight_data.depart_date} to {flight_data.return_date}"
 
+        if flight_data.stop_overs == 1:
+            body = f"{body}\nFlight has {flight_data.stop_overs} stop over, via {flight_data.via_city}."
+
         message = self.client.messages.create(
             body=body,
             from_=self.TWILIO_PHONE_NUMBER,

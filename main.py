@@ -2,9 +2,6 @@ from data_manager import DataManager
 from flight_search import FlightSearch
 from notification_manager import NotificationManager
 
-# This file will need to use the DataManager,FlightSearch, FlightData, NotificationManager classes to achieve the
-# program requirements.
-
 # Load Classes
 from user_data import UserData
 
@@ -30,7 +27,7 @@ def add_iatacode():
 # Search for Flights
 def search_flights():
     print("\nCheapest Flights Found")
-    for data in sheet_data[10:12]:
+    for data in sheet_data:
         flight_data = flight_search.get_flights(data['iataCode'])
 
         if flight_data:
