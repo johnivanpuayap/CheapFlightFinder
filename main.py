@@ -19,6 +19,7 @@ def load_flight_data():
     global sheet_data
     sheet_data = data_manager.get_flight_data()
 
+
 def add_iatacode():
     for data in sheet_data:
         if data['iataCode'] == '':
@@ -29,13 +30,13 @@ def add_iatacode():
 # Search for Flights
 def search_flights():
     print("\nCheapest Flights Found")
-    # for data in sheet_data:
-    #     flight_data = flight_search.get_one_stop_flights(data['iataCode'])
-    #
-    #     if flight_data:
-    #         if flight_data.price < data['lowestPrice']:
-    #             notification_manager.send_message(flight_data)
-    flight_data = flight_search.get_one_stop_flights(sheet_data[12]['iataCode'])
+    for data in sheet_data[10:12]:
+        flight_data = flight_search.get_flights(data['iataCode'])
+
+        if flight_data:
+            if flight_data.price < data['lowestPrice']:
+                notification_manager.send_message(flight_data)
+
 
 # Add New User
 def add_user():
